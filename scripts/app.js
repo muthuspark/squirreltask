@@ -14,6 +14,7 @@ angular
         var database = firebase.database();
         //console.log(location)
         $scope.tasks = {};
+        $scope.loading = true;
         var userid = location.search.split('=')[1];
         firebase.auth().signInAnonymously().catch(function(error) {
             // Handle Errors here.
@@ -31,6 +32,7 @@ angular
                 firebase.database().ref('/users/' + userid).once('value').then(function(snapshot) {
                     $scope.tasks = JSON.parse(snapshot.A.B);
                     console.log($scope.tasks);
+                    $scope.loading = false;
                     $scope.$apply();
                     // ...
                 });
