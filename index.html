@@ -49,7 +49,7 @@
             </div>
             <div class="col-sm-4">
                 <h3>Finished Tasks</h3>
-                <p ng-repeat="item in tasks[selectedCategory] track by $index" ng-click="markAsNotDone(item)" ng-if="item.done">
+                <p ng-repeat="item in tasks[selectedCategory] track by $index" class="finished" ng-click="markAsNotDone(item)" ng-if="item.done">
                     {{item.task}}
                     <span class="badge" style="float:right" ng-click="removeTask(selectedCategory, $index)">x</span>
                 </p>

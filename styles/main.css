@@ -70,3 +70,6 @@
      background: rgba(0, 0, 0, 0.61);
      -webkit-border-radius: 100px;
  }
+.finished{
+     text-decoration: line-through;
+}
