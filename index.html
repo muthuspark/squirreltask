@@ -33,7 +33,8 @@
                 <h3>Current Tasks</h3>
                 <form class="form-inline">
                     <div class="form-group">
-                        <input class="form-control" aria-label="Your Task" ng-model="task" ng-enter="addTask()" placeholder="Your Task">
+                        <div contenteditable ng-model="task" id="editor"></div>
+                        <!-- <input class="form-control" aria-label="Your Task" ng-model="task" ng-enter="addTask()" placeholder="Your Task"> -->
                     </div>
                     <div class="form-group">
                         <input type="date" name="" class="form-control" ng-model="time">
@@ -41,16 +42,17 @@
                     <button type="button" ng-click="addTask()" class="btn btn-default">+ add</button>
                 </form>
                 <br>
-                <p ng-repeat="item in tasks[selectedCategory] track by $index" ng-click="markAsDone(item)" ng-if="!item.done">
-                    {{item.task}}
-                    <span class="badge" style="float:right" ng-click="removeTask(selectedCategory, $index)">x</span>
+                <p ng-repeat="item in tasks[selectedCategory] track by $index" class="inprogress" ng-if="!item.done">
+                    <span ng-bind-html="sanitize(item.task)"></span>
+                    <span class="badge" style="float:right" ng-click="removeTask(selectedCategory, $index)">&#x2717;</span>
+                    <span class="badge" style="float:right;background-color: #5cb85c;" ng-click="markAsDone(item)" >&#x2713;</span>
                     <br> <small>{{item.createdDate | date : 'd MMM yy'}}</small>
                 </p>
             </div>
             <div class="col-sm-4">
                 <h3>Finished Tasks</h3>
                 <p ng-repeat="item in tasks[selectedCategory] track by $index" class="finished" ng-click="markAsNotDone(item)" ng-if="item.done">
-                    {{item.task}}
+                    <span ng-bind-html="sanitize(item.task)"></span>
                     <span class="badge" style="float:right" ng-click="removeTask(selectedCategory, $index)">x</span>
                 </p>
             </div>

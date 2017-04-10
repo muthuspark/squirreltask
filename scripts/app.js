@@ -10,7 +10,7 @@
  */
 angular
     .module('squirreltasksApp', [])
-    .controller('MainCtrl', function($scope, $http) {
+    .controller('MainCtrl', function($scope, $http,  $sce) {
         var database = firebase.database();
         //console.log(location)
         $scope.tasks = {};
@@ -30,7 +30,7 @@ angular
                 var uid = user.uid;
                 // console.log(user);
                 firebase.database().ref('/users/' + userid).once('value').then(function(snapshot) {
-                    $scope.tasks = JSON.parse(snapshot.A.B);
+                    $scope.tasks = JSON.parse(snapshot.val());
                     console.log($scope.tasks);
                     $scope.loading = false;
                     $scope.$apply();
@@ -86,8 +86,8 @@ angular
             $scope.changed = !$scope.changed;
         }
 
-        $scope.removeTask = function(cat, index){
-            $scope.tasks[cat].splice(index,1);
+        $scope.removeTask = function(cat, index) {
+            $scope.tasks[cat].splice(index, 1);
             $scope.changed = !$scope.changed;
         }
 
@@ -97,6 +97,10 @@ angular
                 firebase.database().ref('users/' + userid).set(JSON.stringify($scope.tasks));
             }
         });
+
+        $scope.sanitize = function(html){
+            return $sce.trustAsHtml(html);
+        }
 
     }).directive('ngEnter', function() {
         return function(scope, element, attrs) {
@@ -110,4 +114,20 @@ angular
                 }
             });
         };
-    });;
+    }).directive("contenteditable", function() {
+        return {
+            restrict: "A",
+            require: "ngModel",
+            link: function(scope, element, attrs, ngModel) {
+                function read() {
+                    ngModel.$setViewValue(element.html());
+                }
+                ngModel.$render = function() {
+                    element.html(ngModel.$viewValue || "");
+                };
+                element.bind("blur keyup change", function() {
+                    scope.$apply(read);
+                });
+            }
+        };
+    });
